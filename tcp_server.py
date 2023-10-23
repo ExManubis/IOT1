@@ -8,6 +8,7 @@ import _thread
 
 # VARIABLES
 server_ip = "10.136.132.200"
+
 # open data file and make variable for appending data
 f = open('data.txt', 'a') # a = appending 
 
