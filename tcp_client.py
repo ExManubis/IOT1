@@ -1,12 +1,8 @@
 #! /bin/python3
+
 # IMPORTS
 import socket
 import sys
-
-
-# VARIABLES
-#server_host = "10.136.132.200"
-#server_port = 2222
 
 # PROGRAM
 try:
@@ -26,4 +22,3 @@ try:
 except KeyboardInterrupt:
     print('quitting...')
     sys.exit()
-
