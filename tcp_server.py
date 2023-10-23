@@ -14,7 +14,7 @@ f = open('data.txt', 'a') # a = appending
 
 # FUNCTIONS
 
-# Firstly create connection function with server port as argument.
+# First create connection function with server port as argument.
 def con(server_port):
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
