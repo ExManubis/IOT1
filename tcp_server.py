@@ -7,7 +7,7 @@ import sys
 import _thread
 
 # VARIABLES
-
+server_ip = "10.136.132.200"
 # open data file and make variable for appending data
 f = open('data.txt', 'a') # a = appending 
 
@@ -18,7 +18,7 @@ f = open('data.txt', 'a') # a = appending
 def con1():
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.bind(('10.136.132.200', 2222))
+            s.bind((server_ip, 2222))
             s.listen(3)
             connection, addr = s.accept()
             with connection:
@@ -48,7 +48,7 @@ def con1():
 def con2():
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.bind(('10.136.132.200', 3333))
+            s.bind((server_ip, 3333))
             s.listen(3)
             connection, addr = s.accept()
             with connection:
@@ -77,7 +77,7 @@ def con2():
 def con3():
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.bind(('10.136.132.200', 4444))
+            s.bind((server_ip, 4444))
             s.listen(3)
             connection, addr = s.accept()
             with connection:
