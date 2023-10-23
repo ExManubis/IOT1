@@ -22,7 +22,7 @@ def con1():
             s.listen(3)
             connection, addr = s.accept()
             with connection:
-                print(f'Connected by {addr}')
+                print(f'{addr} connected to server!')
                 while True:
                     message, client = connection.recvfrom(1024)
                     print()
@@ -52,7 +52,7 @@ def con2():
             s.listen(3)
             connection, addr = s.accept()
             with connection:
-                print(f'Connected by {addr}')
+                print(f'{addr} connected to server!')
                 while True:
                     message, client = connection.recvfrom(1024)
                     print()
@@ -81,7 +81,7 @@ def con3():
             s.listen(3)
             connection, addr = s.accept()
             with connection:
-                print(f'Connected by {addr}')
+                print(f'{addr} connected to server!')
                 while True:
                     message, client = connection.recvfrom(1024)
                     print()
@@ -107,6 +107,11 @@ def con3():
 _thread.start_new_thread(con1, ())
 _thread.start_new_thread(con2, ())
 _thread.start_new_thread(con3, ())
+print('===========================')
+print('|                         |')
+print('|  Welcome to SSO v.1.0!  |')
+print('|                         |')
+print('===========================')
 while True:
-    print('running..')
+    print('\nrunning...waiting for data..')
     sleep(10)
