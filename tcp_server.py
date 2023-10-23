@@ -14,6 +14,9 @@ import _thread
 f = open('data.txt', 'a') # a = appending 
 
 # FUNCTIONS
+
+# Define three connections, with different ports for concurrent
+# connections via threading.
 def con1():
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
