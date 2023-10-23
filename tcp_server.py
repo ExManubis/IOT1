@@ -16,10 +16,10 @@ f = open('data.txt', 'a') # a = appending
 
 # Define three connections, with different ports for concurrent
 # connections via threading.
-def con1():
+def con(server_port):
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.bind((server_ip, 2222))
+            s.bind((server_ip, server_port))
             s.listen(3)
             connection, addr = s.accept()
             with connection:
@@ -46,63 +46,14 @@ def con1():
         print('Quitting....')
         sys.exit()
 
+def con1():
+    con(2222)
+
 def con2():
-    try:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.bind((server_ip, 3333))
-            s.listen(3)
-            connection, addr = s.accept()
-            with connection:
-                print(f'{addr} connected to server!')
-                while True:
-                    message, client = connection.recvfrom(1024)
-                    print()
-                    print('===============================')
-                    besked = message.decode() + f'\nIP: {addr}'
-                    if besked == f'\nIP: {addr}':
-                        break
-                    else:
-                        print(besked)
-                        print('===============================')
-                        print()
-                        f.write('==============================')
-                        f.write('\n')
-                        f.write(besked)
-                        f.write('\n')
-                        f.write('==============================')
-                        f.write('\n')
-                        f.close
-    except KeyboardInterrupt:
-        sys.exit()
+    con(3333)
 
 def con3():
-    try:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.bind((server_ip, 4444))
-            s.listen(3)
-            connection, addr = s.accept()
-            with connection:
-                print(f'{addr} connected to server!')
-                while True:
-                    message, client = connection.recvfrom(1024)
-                    print()
-                    print('===============================')
-                    besked = message.decode() + f'\nIP: {addr}'
-                    if besked == f'\nIP: {addr}':
-                        break
-                    else:
-                        print(besked)
-                        print('===============================')
-                        print()
-                        f.write('==============================')
-                        f.write('\n')
-                        f.write(besked)
-                        f.write('\n')
-                        f.write('==============================')
-                        f.write('\n')
-                        f.close
-    except KeyboardInterrupt:
-        sys.exit()
+    con(4444)
 
 # PROGRAM
 _thread.start_new_thread(con1, ())
