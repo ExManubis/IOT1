@@ -14,8 +14,7 @@ f = open('data.txt', 'a') # a = appending
 
 # FUNCTIONS
 
-# Define three connections, with different ports for concurrent
-# connections via threading.
+# Firstly create connection function with server port as argument.
 def con(server_port):
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -46,6 +45,7 @@ def con(server_port):
         print('Quitting....')
         sys.exit()
 
+# Define three connections for concurrent connections via TCP.
 def con1():
     con(2222)
 
