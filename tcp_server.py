@@ -4,7 +4,6 @@
 from time import sleep
 import socket
 import sys
-import threading
 import _thread
 
 # VARIABLES
