@@ -6,7 +6,6 @@ import socket
 import sys
 import threading
 import _thread
-#import pymysql
 
 # VARIABLES
 
