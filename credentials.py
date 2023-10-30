@@ -1,6 +1,6 @@
 credentials = {
-    'ssid' :  'sof', #Hotstpot navn
-    'password' : 'Sommer666', #Hotspot password
+    'ssid' :  'LTE-1428', #Hotstpot navn
+    'password' : '12345678', #Hotspot password
     'ADAFRUIT_IO_URL' : b'io.adafruit.com', #Adafruit link
     'ADAFRUIT_USERNAME' : b'storeK', #Adafruit navn
     'ADAFRUIT_IO_KEY' : b'aio_GiZz8399uUQ2vYzO2TqXxRC3fquV',#Adafruit nøgle
