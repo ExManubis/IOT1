@@ -4,6 +4,7 @@ import umqtt_robust2 as mqtt
 import geofence as geof
 from machine import UART
 from time import sleep
+from imu import MPU6050 #IMU Libary
 from gps_bare_minimum import GPS_Minimum
 #########################################################################
 # CONFIGURATION

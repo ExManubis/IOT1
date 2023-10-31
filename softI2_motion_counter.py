@@ -5,10 +5,6 @@ Then it counts the times that the axis have been changed from the Standing possi
 
 The Y axis pointing up is deffined as the "standing up straight" for the pourouses of mounting the
 IMU unto a wearable device.
-
-©Alexis Fredegaard 
-Date: 27 october 2023
-alexisfredegaard@gmail.com
 """
 
 ###########################################################################################
@@ -56,13 +52,6 @@ while True:
     acceleration = imu.accel   #from Libary, measures acceleration on axis.
     gyroscope = imu.gyro       #from Libary, measures rotation and direction on axis.
     
-    """print ("Acceleration x: ", round(acceleration.x,2), " y:", round(acceleration.y,2),
-           "z: ", round(acceleration.z,2))
-           
-    print ("gyroscope x: ", round(gyroscope.x,2), " y:", round(gyroscope.y,2),
-           "z: ", round(gyroscope.z,2))
-    """
-    
     fall_detect()
     
 # data interpretation (accelerometer)
@@ -93,17 +82,6 @@ while True:
         else:
             #z turned down"
             standing = False 
-
-# data interpretation (gyroscope)
-
-#    if abs(gyroscope.x) > 20:
-#        print("Rotation around the x axis")
-
-#    if abs(gyroscope.y) > 20:
-#        print("Rotation around the y axis")
-
-#    if abs(gyroscope.z) > 20:
-#        print("Rotation around the z axis")
     
     time.sleep(0.5)
 ###########################################################################################
