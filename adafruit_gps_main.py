@@ -10,9 +10,9 @@ from gps_bare_minimum import GPS_Minimum
 gps_port = 2                               # ESP32 UART port
 gps_speed = 9600                           # UART speed
 
-gflat = 55.6918                     #Geofence Lat
-gflon = 12.5546                     #Geofence Lon
-gfradius = 15                           #Geofence radius in meter
+gflat = 55.6918      #Geofence Lat defines lat center of Geofence circle 
+gflon = 12.5546      #Geofence Lon defines lon center of Geofence circle
+gfradius = 15        #Geofence radius in meter
 #########################################################################
 # OBJECTS
 uart = UART(gps_port, gps_speed)           # UART object creation
@@ -34,10 +34,9 @@ def get_adafruit_gps():
             return False
 
 
-def geo_measure():
-    lat1 = gps.get_latitude()
+def geo_measure():            #Function to measure if GPS position is within defined geofence
+    lat1 = gps.get_latitude() 
     lon1 = gps.get_longitude()
-    #result = geof.inside_geofence(lon1, lon1, gflat, gflon, gfradius)
     result = geof.inside_geofence(lat1, lon1, gflat, gflon, gfradius)
     if result == True:
         print("---------------Gps within geofence---------------")
