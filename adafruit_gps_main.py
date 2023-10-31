@@ -1,6 +1,7 @@
 #########################################################################
 # IMPORT
 import umqtt_robust2 as mqtt
+import geofence as geof
 from machine import UART
 from time import sleep
 from gps_bare_minimum import GPS_Minimum
@@ -8,6 +9,10 @@ from gps_bare_minimum import GPS_Minimum
 # CONFIGURATION
 gps_port = 2                               # ESP32 UART port
 gps_speed = 9600                           # UART speed
+
+gflat = 55.6918                     #Geofence Lat
+gflon = 12.5546                     #Geofence Lon
+gfradius = 15                           #Geofence radius in meter
 #########################################################################
 # OBJECTS
 uart = UART(gps_port, gps_speed)           # UART object creation
@@ -28,6 +33,18 @@ def get_adafruit_gps():
             print(f"GPS data to adafruit not valid:\nspeed: {speed}\nlatitude: {lat}\nlongtitude: {lon}")
             return False
 
+
+def geo_measure():
+    lat1 = gps.get_latitude()
+    lon1 = gps.get_longitude()
+    #result = geof.inside_geofence(lon1, lon1, gflat, gflon, gfradius)
+    result = geof.inside_geofence(lat1, lon1, gflat, gflon, gfradius)
+    if result == True:
+        print("---------------Gps within geofence---------------")
+    
+    else:
+        print("xxxxxxxxxxxxxxxx-GPS is outside geofence-xxxxxxxxxxxxxxxx")
+
 while True:
     try:
         # Hvis funktionen returnere en string er den True ellers returnere den False
@@ -42,6 +59,10 @@ while True:
             mqtt.besked = ""            
         mqtt.sync_with_adafruitIO() # igangsæt at sende og modtage data med Adafruit IO             
         print(".", end = '') # printer et punktum til shell, uden et enter
+         
+        geo_measure()
+        
+
         
     # Stopper programmet når der trykkes Ctrl + c
     except KeyboardInterrupt:
