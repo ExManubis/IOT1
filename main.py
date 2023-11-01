@@ -1,9 +1,8 @@
 # IMPORTS
-from machine import I2C, SoftI2C, UART
+from machine import I2C, SoftI2C, UART, Pin, ADC
 import sys
 import uselect
 import _thread
-from machine import Pin, ADC
 from gpio_lcd import GpioLcd
 from time import sleep
 import geofence as geo_f
@@ -27,7 +26,7 @@ battery.atten(ADC.ATTN_11DB)
 bat_min = 2300.0
 bat_max = 880.0
 
-#GPS + Geofence related variables:
+# GPS + Geofence related variables:
 gps_port = 2         # ESP32 UART port
 gps_speed = 9600     # UART speed
 gflat = 55.6918      #Geofence Lat defines lat center of Geofence circle 
@@ -37,11 +36,11 @@ gfradius = 15        #Geofence radius in meter
 uart = UART(gps_port, gps_speed)           # UART object creation
 gps = GPS_Minimum(uart)                    # GPS object creation
 
-#IMU Related Objects
+# IMU Related Objects
 i2c = SoftI2C(scl = Pin(12), sda = Pin(14), freq =400000) #softI2C for custom pins
 imu = MPU6050(i2c)                                        #imu object
 
-#fallcheck function related variables
+# Fallcheck function related variables
 count = 0         #counter for number of trips measured.
 standing = True     #dieraction of the IMU measurement. true is deffined as standing up.
 current_value = True        #first check of direction. used to measure differences in directions
@@ -72,18 +71,18 @@ def bat_read_thread():
             sys.exit()
         sleep(60)
 
+# Fall detection function
 def fall_detect(): #function for IMU to detect fall
     global current_value  #global values to access variable outside function.
     global previous_value
     global count
-    
     if previous_value != current_value and not current_value:  # increase count if check1 and check2 are different. and not already fallen.
         count = count + 1
         print("fall counter: ", count)  #print fall count
         ############################################################### NEED LCD PUTSTR HERE ##################################################
-    
     previous_value = current_value
 
+# IMU thread function
 def imu_thread():
     while True:
         # reading values
@@ -123,6 +122,7 @@ def imu_thread():
         
         sleep(0.5) #pause between measure
 
+# Adafruit GPS function
 def get_adafruit_gps():
     speed = lat = lon = None # Opretter variabler med None som værdi
     if gps.receive_nmea_data():
@@ -176,6 +176,7 @@ def adafruit_thread():
             mqtt.sys.exit()
 
 """
+
 # PROGRAM
 while True:
     try:
@@ -183,24 +184,14 @@ while True:
         gps_data = get_adafruit_gps()
         if gps_data: # hvis der er korrekt data så send til adafruit
             print(f'\ngps_data er: {gps_data}') # Printer GPS data
-            mqtt.web_print(gps_data, 'storeK/feeds/Vest/csv') # Sender GPS data til adafruit
-            
+            mqtt.web_print(gps_data, 'storeK/feeds/Vest/csv') # Sender GPS data til adafruit 
         sleep(4) # venter mere end 3 sekunder mellem hver besked der sendes til adafruit
-        
         if len(mqtt.besked) != 0: # Her nulstilles indkommende beskeder
             mqtt.besked = ""            
         mqtt.sync_with_adafruitIO() # igangsæt at sende og modtage data med Adafruit IO             
         print(".", end = '') # printer et punktum til shell, uden et enter
          
         geo_measure()
-        
-
-        
-    # Stopper programmet når der trykkes Ctrl + c
-    except KeyboardInterrupt:
-        print('Ctrl-C pressed...exiting')
-        mqtt.c.disconnect()
-        mqtt.sys.exit()
 _thread.start_new_thread(bat_read_thread, ())
 _thread.start_new_thread(imu_thread, ())
 #_thread.start_new_thread(adafruit_thread, ())
