@@ -38,7 +38,7 @@ uart = UART(gps_port, gps_speed)           # UART object creation
 gps = GPS_Minimum(uart)                    # GPS object creation
 
 #IMU Related Objects
-i2c = SoftI2C(scl = Pin(12), sda = Pin(14), freq =400000) #softI2C for custom pins
+i2c = SoftI2C(scl = Pin(13), sda = Pin(14), freq =400000) #softI2C for custom pins
 imu = MPU6050(i2c)                                        #imu object
 
 #fallcheck function related variables
@@ -177,6 +177,12 @@ def adafruit_thread():
 
 """
 # PROGRAM
+
+#threads
+_thread.start_new_thread(bat_read_thread, ())
+_thread.start_new_thread(imu_thread, ())
+#_thread.start_new_thread(adafruit_thread, ())
+
 while True:
     try:
         # Hvis funktionen returnere en string er den True ellers returnere den False
@@ -201,7 +207,5 @@ while True:
         print('Ctrl-C pressed...exiting')
         mqtt.c.disconnect()
         mqtt.sys.exit()
-_thread.start_new_thread(bat_read_thread, ())
-_thread.start_new_thread(imu_thread, ())
-#_thread.start_new_thread(adafruit_thread, ())
+
 

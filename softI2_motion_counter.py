@@ -17,7 +17,7 @@ from machine import Pin, I2C, SoftI2C
 ###########################################################################################
 #objects
 
-i2c = SoftI2C(scl = Pin(12), sda = Pin(14), freq =400000) #softI2C for custom pins
+i2c = SoftI2C(scl = Pin(13), sda = Pin(14), freq =400000) #softI2C for custom pins
 imu = MPU6050(i2c)                                        #imu object
 
 ###########################################################################################
@@ -37,7 +37,8 @@ def fall_detect():
     global previous_value
     global count
     
-    if previous_value != current_value and not current_value:  # increase count if check1 and check2 are different. and not already fallen.
+    # increase count if check1 and check2 are different. and not already fallen.
+    if previous_value != current_value and not current_value:  
         #print("check1 :", check1, " check2: ", check2)
         count = count + 1
         print("fall counter: ", count)  #print fall count
