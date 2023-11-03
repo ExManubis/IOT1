@@ -26,7 +26,7 @@ lcd = GpioLcd(rs_pin=Pin(27), enable_pin=Pin(25),
                   num_lines=2, num_columns=16)
 
 # Create variables + object for battery
-battery = ADC(Pin(39)) # set BAT to pin 34
+battery = ADC(Pin(39)) # set BAT to pin 39
 battery.atten(ADC.ATTN_11DB)
 bat_min = 2300.0
 bat_max = 880.0
