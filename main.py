@@ -15,6 +15,21 @@ import geofence as geof
 
 # VARIABLES
 
+# Create GPS + Geofence related variables:
+gps_port = 2         # ESP32 UART port
+gps_speed = 9600     # UART speed
+gflat = 55.692617    # Geofence Lat defines lat center of Geofence circle 
+gflon = 12.557674    # Geofence Lon defines lon center of Geofence circle
+gfradius = 20        # Geofence radius in meter
+
+# Fallcheck function related variables
+count = 0                 #counter for number of trips measured.
+standing = True           #dieraction of the IMU measurement. true is deffined as standing up.
+previous_value = True     #second check of direction. used to measure differences in directions
+
+# Objects:
+
+# Led Objects
 ledred = Pin(15, Pin.OUT)
 ledgreen = Pin(2, Pin.OUT)
 ledyellow = Pin(0,Pin.OUT)
@@ -32,25 +47,15 @@ bat_min = 2300.0
 bat_max = 880.0
 bat_pct_int = 0 #battery percent for adafruit and display
 
-#GPS + Geofence related variables:
-gps_port = 2         # ESP32 UART port
-gps_speed = 9600     # UART speed
-gflat = 55.692617      #Geofence Lat defines lat center of Geofence circle 
-gflon = 12.557674      #Geofence Lon defines lon center of Geofence circle
-gfradius = 20        #Geofence radius in meter
-#gps objects
+# Gps objects
 uart = UART(gps_port, gps_speed)           # UART object creation
 gps = GPS_Minimum(uart)                    # GPS object creation
 
-#IMU Related Objects
-i2c = SoftI2C(scl = Pin(13), sda = Pin(14), freq =400000) #softI2C for custom pins
-imu = MPU6050(i2c)                                        #imu object
-
-#fallcheck function related variables
-count = 0         #counter for number of trips measured.
-standing = True     #dieraction of the IMU measurement. true is deffined as standing up.
-previous_value = True        #second check of direction. used to measure differences in directions
-
+# IMU Related Objects
+i2c = SoftI2C(scl = Pin(13), #softI2C for custom pins
+              sda = Pin(14),
+              freq =400000) 
+imu = MPU6050(i2c)           #imu object
 
 # FUNCTIONS
 
@@ -78,7 +83,7 @@ def bat_read_thread():
         
         sleep(60)
 
-def fall_detect(): #function for IMU to detect fall
+def fall_detect():   #function for IMU to detect fall
     global standing  #global values to access variable outside function.
     global previous_value
     global count
@@ -103,7 +108,6 @@ def imu_thread():
         fall_detect()
         
     # data interpretation (accelerometer)
-
         if abs(acceleration.x) > 0.95:  #abs() function returns absolute values without + or -
             if (acceleration.x > 0):
                 #x turned up up
@@ -136,19 +140,23 @@ def imu_thread():
 def get_adafruit_gps():
     speed = lat = lon = None # Opretter variabler med None som værdi
     if gps.receive_nmea_data():
+        
         # hvis der er kommet end bruggbar værdi på alle der skal anvendes
         if gps.get_speed() != -999 and gps.get_latitude() != -999.0 and gps.get_longitude() != -999.0 and gps.get_validity() == "A":
+            
             # gemmer returværdier fra metodekald i variabler
             speed =str(gps.get_speed())
             lat = str(gps.get_latitude())
             lon = str(gps.get_longitude())
+            
             # returnerer data med adafruit gps format der skal være 3 for at få den rigtige destination
             return speed + "," + lat + "," + lon + "," + "0.0"
         else: # hvis ikke både hastighed, latitude og longtitude er korrekte 
             print(f"GPS data to adafruit not valid:\nspeed: {speed}\nlatitude: {lat}\nlongtitude: {lon}")
             return False
-
-def geo_measure():            #Function to measure if GPS position is within defined geofence
+        
+#Function to measure if GPS position is within defined geofence
+def geo_measure():   
     global ledyellow
     global ledred
     global ledgreen
@@ -172,12 +180,9 @@ def geo_measure():            #Function to measure if GPS position is within def
 
 # PROGRAM
 
-#threads
-_thread.start_new_thread(imu_thread, ())
-_thread.start_new_thread(bat_read_thread, ())
 
-
-#_thread.start_new_thread(adafruit_thread, ())
+_thread.start_new_thread(imu_thread, ())       #thread    
+_thread.start_new_thread(bat_read_thread, ())  #thread
 
 while True:
     try:
@@ -197,9 +202,7 @@ while True:
         mqtt.sync_with_adafruitIO() # igangsæt at sende og modtage data med Adafruit IO             
         print(".", end = '') # printer et punktum til shell, uden et enter
          
-        geo_measure()
-        
-
+        geo_measure() #runs the geo-fence measure function
         
     # Stopper programmet når der trykkes Ctrl + c
     except KeyboardInterrupt:

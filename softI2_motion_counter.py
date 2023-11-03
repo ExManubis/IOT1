@@ -1,52 +1,37 @@
-"""
-IMU software for measuring times the Axis of the gyroscope is changed from upright Y axis.
-the software measures the direction of the axis and saves it in variables to compare the states.
-Then it counts the times that the axis have been changed from the Standing possision.
-
-The Y axis pointing up is deffined as the "standing up straight" for the pourouses of mounting the
-IMU unto a wearable device.
-"""
-
-###########################################################################################
-#Import block
+# Imports
 
 from imu import MPU6050  # IMU libary from https://github.com/micropython-IMU/micropython-mpu9x50
 import time
 from machine import Pin, I2C, SoftI2C
 
-###########################################################################################
-#objects
+# Objects
 
 i2c = SoftI2C(scl = Pin(13), sda = Pin(14), freq =400000) #softI2C for custom pins
 imu = MPU6050(i2c)                                        #imu object
 
-###########################################################################################
-#variables
+# Variables
 
 count = 0         #counter for number of trips measured.
 standing = True     #dieraction of the IMU measurement. true is deffined as standing up.
-current_value = True        #first check of direction. used to measure differences in directions
 previous_value = True        #second check of direction. used to measure differences in directions
 
-###########################################################################################
-#function
+# Function
 
-#function for detecting fall. compares measurements for if IMU output changes from 0 to 1.        
+        # Function for detecting fall. compares measurements for if IMU output changes from 0 to 1.        
 def fall_detect():
-    global current_value  #global values to access variable outside function.
+    global standing       #global values to access variable outside function.
     global previous_value
     global count
     
     # increase count if check1 and check2 are different. and not already fallen.
-    if previous_value != current_value and not current_value:  
-        #print("check1 :", check1, " check2: ", check2)
+    if previous_value != standing and not standing:  
         count = count + 1
         print("fall counter: ", count)  #print fall count
     
-    previous_value = current_value
+    previous_value = standing
         
 
-#################################### {Main Code Block} ####################################
+# Program 
 
 while True:
     # reading values
@@ -85,4 +70,3 @@ while True:
             standing = False 
     
     time.sleep(0.5)
-###########################################################################################
