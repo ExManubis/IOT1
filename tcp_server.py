@@ -7,7 +7,7 @@ import sys
 import _thread
 
 # VARIABLES
-server_ip = "10.0.0.5"
+server_ip = "ENTER IP FOR SERVER"
 
 # open data file and make variable for appending data
 f = open('data.txt', 'a') # a = appending 

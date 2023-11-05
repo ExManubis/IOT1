@@ -1,9 +1,8 @@
 # IMPORTS
-from machine import I2C, SoftI2C, UART
+from machine import I2C, SoftI2C, UART, Pin, ADC
 import sys
 import uselect
 import _thread
-from machine import Pin, ADC
 from gpio_lcd import GpioLcd
 from time import sleep
 import geofence as geo_f
@@ -27,7 +26,7 @@ count = 0                 #counter for number of trips measured.
 standing = True           #dieraction of the IMU measurement. true is deffined as standing up.
 previous_value = True     #second check of direction. used to measure differences in directions
 
-# Objects:
+# OBJECTS:
 
 # Led Objects
 ledred = Pin(15, Pin.OUT)
@@ -107,7 +106,7 @@ def imu_thread():
         
         fall_detect()
         
-    # data interpretation (accelerometer)
+    # Data interpretation (accelerometer)
         if abs(acceleration.x) > 0.95:  #abs() function returns absolute values without + or -
             if (acceleration.x > 0):
                 #x turned up up
@@ -155,7 +154,7 @@ def get_adafruit_gps():
             print(f"GPS data to adafruit not valid:\nspeed: {speed}\nlatitude: {lat}\nlongtitude: {lon}")
             return False
         
-#Function to measure if GPS position is within defined geofence
+# Function to measure if GPS position is within defined geofence
 def geo_measure():   
     global ledyellow
     global ledred
